@@ -6,7 +6,7 @@
             <span class="material-icons">
                 edit
             </span>
-            <span class="material-icons">
+            <span class="material-icons" @click="deleteProject">
                 delete
             </span>
             <span class="material-icons">
@@ -25,14 +25,20 @@ export default {
     props:['project'],
     data(){
         return{
-            showDetails:false
+            showDetails:false,
+            uri:'http://localhost:3008/project/' + this.project.id
         }
     },
     methods:{
-        
-    }
-
-}
+        deleteProject(){
+            //Bu metot bir istek yapacak
+            //db.json içerisinde silme işlemi yapıyorum fakat üst component içerisinde bulunan projects dizisindende bu veriyi silmem gerekiyor. event olarak yukarıya bunu göndereceğim.
+            fetch(this.uri,{method: "DELETE"}).then(() => 
+            this.$emit("delete",this.project.id)
+            );//event ile beraber id'yi gönderdim.
+        },
+    },
+};
 </script>
 
 <style>
