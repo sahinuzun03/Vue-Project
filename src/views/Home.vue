@@ -2,17 +2,20 @@
   <div class="home">
   <div v-if="projects.length">
     <div v-for="project in projects" :key="project.id">
-      <h2>{{ project.title }}</h2>
-      <p>{{ project.details }}</p>
+      <!-- SingleProject vue tarafına bizim burada bulduğumuz project kısmını gönderdik. -->
+      <SingleProject :project="project"></SingleProject>
     </div>
   </div>
   </div>
 </template>
 
 <script>
+import SingleProject from '@/components/SingleProject.vue';
+
 export default {
-  name: 'HomeView',
+  name: 'Home',
   components: {
+    SingleProject
   },
   data(){
     return{
