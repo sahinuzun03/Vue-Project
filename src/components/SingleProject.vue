@@ -1,15 +1,15 @@
 <template>
-  <div class="project">
+  <div class="project" :class="{complete:project.complete}">
     <div class="actions">
         <h3 @click="showDetails = !showDetails">{{ project.title }}</h3>
         <div class="icons">
-            <span class="material-icons">
+            <router-link :to="{name:'EditProject',params:{id:project.id}}"><span class="material-icons">
                 edit
-            </span>
+            </span></router-link>
             <span class="material-icons" @click="deleteProject">
                 delete
             </span>
-            <span class="material-icons">
+            <span class="material-icons tick" @click="toggleComplete">
                 done
             </span>
         </div>
@@ -26,7 +26,7 @@ export default {
     data(){
         return{
             showDetails:false,
-            uri:'http://localhost:3008/project/' + this.project.id
+            uri:'http://localhost:3008/projects/' + this.project.id
         }
     },
     methods:{
@@ -35,8 +35,17 @@ export default {
             //db.json içerisinde silme işlemi yapıyorum fakat üst component içerisinde bulunan projects dizisindende bu veriyi silmem gerekiyor. event olarak yukarıya bunu göndereceğim.
             fetch(this.uri,{method: "DELETE"}).then(() => 
             this.$emit("delete",this.project.id)
-            );//event ile beraber id'yi gönderdim.
+            ).catch(err => console.log(err));//event ile beraber id'yi gönderdim.
         },
+        toggleComplete(){
+            fetch(this.uri,{
+                method:"PATCH",
+                headers:{'Content-Type':'application/json'},//fetch json headers diye aratacağız
+                body:JSON.stringify({complete:!'this.project.complete'})
+            }).then(() => 
+            this.$emit("complete",this.project.id)
+            .catch(err => console.log(err)));
+        }
     },
 };
 </script>
@@ -70,5 +79,14 @@ h3{
 
 .material-icons:hover{
     color:#888;
+}
+
+.project.complete{
+    border-left: 4px solid #76dd78;
+}
+
+.project.complete .tick{
+    color:#76dd78;
+
 }
 </style>
